@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VideoRAG</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="layout">
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-icon">▶</span>
+        <span class="brand-name">VideoRAG</span>
+      </div>
+
+      <section class="sidebar-section">
+        <p class="sidebar-label">Upload Video</p>
+
+        <div class="drop-zone" id="dropZone">
+          <input type="file" id="fileInput" accept="video/*" hidden />
+          <div class="drop-inner">
+            <span class="drop-icon">⬆</span>
+            <p>Drop an MP4 here or <button class="link-btn" id="browseBtn">browse</button></p>
+            <p class="drop-hint">MP4, MOV, AVI, MKV, WEBM</p>
+          </div>
+        </div>
+
+        <div id="fileInfo" class="file-info hidden">
+          <span id="fileName" class="file-name"></span>
+          <button class="icon-btn" id="clearFile" title="Remove">✕</button>
+        </div>
+
+        <button class="btn btn-primary" id="processBtn" disabled>
+          Process Video
+        </button>
+
+        <div id="progressWrap" class="progress-wrap hidden">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <p class="progress-label" id="progressLabel">Transcribing…</p>
+        </div>
+      </section>
+
+      <section class="sidebar-section" id="sessionInfo" hidden>
+        <p class="sidebar-label">Session</p>
+        <div class="session-card">
+          <div class="session-row">
+            <span class="dot dot-green"></span>
+            <span id="sessionFilename" class="session-filename"></span>
+          </div>
+          <span id="sessionSegments" class="session-segments"></span>
+        </div>
+      </section>
+    </aside>
+
+    <!-- ── Main ── -->
+    <main class="main">
+      <!-- Empty state -->
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">🎬</div>
+        <h2>Ask anything about your video</h2>
+        <p>Upload and process a video on the left, then type your question below.</p>
+      </div>
+
+      <!-- Chat messages -->
+      <div class="chat-feed" id="chatFeed" hidden></div>
+
+      <!-- Input bar -->
+      <div class="input-bar" id="inputBar">
+        <input
+          type="text"
+          id="queryInput"
+          class="query-input"
+          placeholder="Ask a question about the video…"
+          disabled
+          autocomplete="off"
+        />
+        <label class="eval-toggle" title="Run LLM evaluation on each answer">
+          <input type="checkbox" id="evalToggle" />
+          <span>Eval</span>
+        </label>
+        <button class="btn btn-send" id="sendBtn" disabled>Send</button>
+      </div>
+    </main>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
