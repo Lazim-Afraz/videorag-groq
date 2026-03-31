@@ -25,17 +25,28 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+ALLOWED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv("ALLOWED_ORIGINS", "").split(",")
+    if origin.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=ALLOWED_ORIGINS or ["*"],
+    allow_methods=["POST", "GET"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 app.include_router(video_router, prefix="/api")
 app.include_router(search_router, prefix="/api")
 
 # Serve the frontend from the same process when running locally.
-_frontend = os.path.join(os.path.dirname(__file__), "..", "frontend")
+_frontend = os.path.join(os.path.dirname(__file__), "frontend")
 if os.path.isdir(_frontend):
     app.mount("/", StaticFiles(directory=_frontend, html=True), name="frontend")
+else:
+    # Serve from same directory (HuggingFace Spaces)
+    _local = os.path.dirname(__file__)
+    if os.path.exists(os.path.join(_local, "index.html")):
+        app.mount("/", StaticFiles(directory=_local, html=True), name="frontend")
